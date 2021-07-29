@@ -1,0 +1,170 @@
+
+mysql> show databases;
++----------------------+
+| Database             |
++----------------------+
+| addressbookservicedb |
+| information_schema   |
+| mysql                |
+| payroll_service      |
+| performance_schema   |
+| sakila               |
+| sys                  |
+| world                |
++----------------------+
+8 rows in set (0.51 sec)
+
+mysql> create database spotify;
+Query OK, 1 row affected (0.29 sec)
+
+mysql> show databases;
++----------------------+
+| Database             |
++----------------------+
+| addressbookservicedb |
+| information_schema   |
+| mysql                |
+| payroll_service      |
+| performance_schema   |
+| sakila               |
+| spotify              |
+| sys                  |
+| world                |
++----------------------+
+9 rows in set (0.00 sec)
+
+mysql> use spotify;
+Database changed
+
+mysql> CREATE TABLE User
+    -> (
+    -> user_id int(15),
+    -> user_name varchar(30),
+    -> user_email varchar(30),
+    -> user_password varchar(30),
+    -> PRIMARY KEY(user_id)
+    -> );
+Query OK, 0 rows affected, 1 warning (0.61 sec)
+
+mysql> desc User;
++---------------+-------------+------+-----+---------+-------+
+| Field         | Type        | Null | Key | Default | Extra |
++---------------+-------------+------+-----+---------+-------+
+| user_id       | int         | NO   | PRI | NULL    |       |
+| user_name     | varchar(30) | YES  |     | NULL    |       |
+| user_email    | varchar(30) | YES  |     | NULL    |       |
+| user_password | varchar(30) | YES  |     | NULL    |       |
++---------------+-------------+------+-----+---------+-------+
+4 rows in set (0.13 sec)
+
+mysql> INSERT INTO User(user_id, user_name, user_email, user_password)
+    -> VALUES(1, 'Deva','deva@gmail.com',123),(2, 'Vikash','vik@gmail.com',456),(3,'Devendra','devendra@gmail.com','dddd@123');
+Query OK, 3 rows affected (0.30 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from User;
++---------+-----------+--------------------+---------------+
+| user_id | user_name | user_email         | user_password |
++---------+-----------+--------------------+---------------+
+|       1 | Deva      | deva@gmail.com     | 123           |
+|       2 | Vikash    | vik@gmail.com      | 456           |
+|       3 | Devendra  | devendra@gmail.com | dddd@123      |
++---------+-----------+--------------------+---------------+
+3 rows in set (0.05 sec)
+
+
+mysql> CREATE TABLE playlist
+    -> (
+    -> playlist_id int(30),
+    -> playlist_name varchar(30),
+    -> PRIMARY KEY (playlist_id),
+    -> user_id int,
+    -> CONSTRAINT FK_user_id FOREIGN KEY(user_id)
+    -> REFERENCES User(user_id)
+    -> );
+Query OK, 0 rows affected, 1 warning (7.29 sec)
+
+mysql> desc playlist;
++---------------+-------------+------+-----+---------+-------+
+| Field         | Type        | Null | Key | Default | Extra |
++---------------+-------------+------+-----+---------+-------+
+| playlist_id   | int         | NO   | PRI | NULL    |       |
+| playlist_name | varchar(30) | YES  |     | NULL    |       |
+| user_id       | int         | YES  | MUL | NULL    |       |
++---------------+-------------+------+-----+---------+-------+
+3 rows in set (0.07 sec)
+
+mysql> select * from playlist;
+Empty set (0.03 sec)
+
+mysql> INSERT INTO playlist(playlist_id, playlist_name)
+    -> VALUES(100,'ABC');
+Query OK, 1 row affected (0.14 sec)
+
+mysql> select * from playlist;
++-------------+---------------+---------+
+| playlist_id | playlist_name | user_id |
++-------------+---------------+---------+
+|         100 | ABC           |    NULL |
++-------------+---------------+---------+
+1 row in set (0.04 sec)
+
+mysql> INSERT INTO playlist(playlist_id, playlist_name)
+    -> VALUES(101,'Rock',2);
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> INSERT INTO playlist(playlist_id, playlist_name, user_id)
+    -> VALUES(101,'Rock',2);
+Query OK, 1 row affected (0.55 sec)
+
+mysql> select * from playlist;
++-------------+---------------+---------+
+| playlist_id | playlist_name | user_id |
++-------------+---------------+---------+
+|         100 | ABC           |    NULL |
+|         101 | Rock          |       2 |
++-------------+---------------+---------+
+2 rows in set (0.00 sec)
+
+
+mysql> INSERT INTO playlist(playlist_id, playlist_name, user_id)
+    -> VALUES(102,'Rock Star',3);
+Query OK, 1 row affected (0.52 sec)
+
+mysql> select * from playlist;
++-------------+---------------+---------+
+| playlist_id | playlist_name | user_id |
++-------------+---------------+---------+
+|         100 | ABC           |    NULL |
+|         101 | Rock          |       2 |
+|         102 | Rock Star     |       3 |
++-------------+---------------+---------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO playlist(playlist_id, playlist_name, user_id)
+    -> VALUES(103,'Rock',1);
+Query OK, 1 row affected (0.19 sec)
+
+mysql> select * from playlist;
++-------------+---------------+---------+
+| playlist_id | playlist_name | user_id |
++-------------+---------------+---------+
+|         100 | ABC           |    NULL |
+|         101 | Rock          |       2 |
+|         102 | Rock Star     |       3 |
+|         103 | Rock          |       1 |
++-------------+---------------+---------+
+4 rows in set (0.00 sec)
+
+
+mysql> select user.user_id, playlist.playlist_id from user inner join playlist on user.user_id = playlist.user_id;
++---------+-------------+
+| user_id | playlist_id |
++---------+-------------+
+|       1 |         103 |
+|       2 |         101 |
+|       3 |         102 |
+|       3 |         104 |
++---------+-------------+
+4 rows in set (0.12 sec)
+
+mysql>
