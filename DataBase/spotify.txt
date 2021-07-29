@@ -167,4 +167,31 @@ mysql> select user.user_id, playlist.playlist_id from user inner join playlist o
 +---------+-------------+
 4 rows in set (0.12 sec)
 
-mysql>
+
+mysql> CREATE TABLE track
+    -> (
+    -> track_id int(30),
+    -> track_name varchar(30),
+    -> PRIMARY KEY (track_id),
+    -> playlist_id int,
+    -> CONSTRAINT FK_playlist_id FOREIGN KEY(playlist_id)
+    -> REFERENCES playlist(playlist_id)
+    -> );
+Query OK, 0 rows affected, 1 warning (2.00 sec)
+
+mysql> INSERT INTO track(track_id, track_name,playlist_id)
+    -> VALUES(1000, 'ravi', 100),(1002,'kaker', 101),(1003, 'Guljar', 102),(1004, 'Ajay',103);
+Query OK, 4 rows affected (0.18 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from track;
++----------+------------+-------------+
+| track_id | track_name | playlist_id |
++----------+------------+-------------+
+|     1000 | ravi       |         100 |
+|     1002 | kaker      |         101 |
+|     1003 | Guljar     |         102 |
+|     1004 | Ajay       |         103 |
++----------+------------+-------------+
+4 rows in set (0.00 sec)
+
