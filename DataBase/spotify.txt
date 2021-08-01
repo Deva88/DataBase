@@ -195,3 +195,99 @@ mysql> select * from track;
 +----------+------------+-------------+
 4 rows in set (0.00 sec)
 
+
+mysql> INSERT INTO user(user_id, user_name, user_email, user_password)
+    -> VALUES(103, 'Laptop', 'Lap@gmail.com' , 'lap113');
+Query OK, 1 row affected (0.44 sec)
+
+
+
+===============================================================JOIN Spotify ====================================================
+
+
+===============================================================INNER JOIN=======================================================
+mysql> SELECT user.user_name from user
+    -> where user.user_id in(
+    -> select playlist.playlist_id
+    -> from playlist
+    -> where playlist.playlist_name='rock'
+    -> );
++-----------+
+| user_name |
++-----------+
+| Laptop    |
++-----------+
+1 row in set (0.00 sec)
+
+
+
+mysql> select * from playlist;
++-------------+---------------+---------+
+| playlist_id | playlist_name | user_id |
++-------------+---------------+---------+
+|         100 | ABC           |    NULL |
+|         101 | Rock          |       2 |
+|         102 | Rock Star     |       3 |
+|         103 | Rock          |       1 |
+|         104 | Star          |       3 |
++-------------+---------------+---------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO user(user_id, user_name, user_email, user_password)
+    -> VALUES(104, 'Like', 'L@gmail.com' , '12345');
+Query OK, 1 row affected (0.19 sec)
+
+mysql> select * from user;
++---------+-----------+--------------------+---------------+
+| user_id | user_name | user_email         | user_password |
++---------+-----------+--------------------+---------------+
+|       1 | Deva      | deva@gmail.com     | 123           |
+|       2 | Vikash    | vik@gmail.com      | 456           |
+|       3 | Devendra  | devendra@gmail.com | dddd@123      |
+|     103 | Laptop    | Lap@gmail.com      | lap113        |
+|     104 | Like      | L@gmail.com        | 12345         |
++---------+-----------+--------------------+---------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from playlist
+    -> join user on user.user_id=playlist.playlist_id;
++-------------+---------------+---------+---------+-----------+---------------+---------------+
+| playlist_id | playlist_name | user_id | user_id | user_name | user_email    | user_password |
++-------------+---------------+---------+---------+-----------+---------------+---------------+
+|         103 | Rock          |       1 |     103 | Laptop    | Lap@gmail.com | lap113        |
+|         104 | Star          |       3 |     104 | Like      | L@gmail.com   | 12345         |
++-------------+---------------+---------+---------+-----------+---------------+---------------+
+2 rows in set (0.00 sec)
+
+
+===============================================================Left Join===========================================================
+
+mysql> select * from playlist
+    -> left join user on user.user_id=playlist.playlist_id;
++-------------+---------------+---------+---------+-----------+---------------+---------------+
+| playlist_id | playlist_name | user_id | user_id | user_name | user_email    | user_password |
++-------------+---------------+---------+---------+-----------+---------------+---------------+
+|         100 | ABC           |    NULL |    NULL | NULL      | NULL          | NULL          |
+|         101 | Rock          |       2 |    NULL | NULL      | NULL          | NULL          |
+|         102 | Rock Star     |       3 |    NULL | NULL      | NULL          | NULL          |
+|         103 | Rock          |       1 |     103 | Laptop    | Lap@gmail.com | lap113        |
+|         104 | Star          |       3 |     104 | Like      | L@gmail.com   | 12345         |
++-------------+---------------+---------+---------+-----------+---------------+---------------+
+5 rows in set (0.00 sec)
+
+
+============================================================Right Join=============================================================
+
+mysql> select * from playlist
+    -> right join user on user.user_id=playlist.playlist_id;
++-------------+---------------+---------+---------+-----------+--------------------+---------------+
+| playlist_id | playlist_name | user_id | user_id | user_name | user_email         | user_password |
++-------------+---------------+---------+---------+-----------+--------------------+---------------+
+|        NULL | NULL          |    NULL |       1 | Deva      | deva@gmail.com     | 123           |
+|        NULL | NULL          |    NULL |       2 | Vikash    | vik@gmail.com      | 456           |
+|        NULL | NULL          |    NULL |       3 | Devendra  | devendra@gmail.com | dddd@123      |
+|         103 | Rock          |       1 |     103 | Laptop    | Lap@gmail.com      | lap113        |
+|         104 | Star          |       3 |     104 | Like      | L@gmail.com        | 12345         |
++-------------+---------------+---------+---------+-----------+--------------------+---------------+
+5 rows in set (0.00 sec)
+
